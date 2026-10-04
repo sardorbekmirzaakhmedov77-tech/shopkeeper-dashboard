@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shopkeeper · Sales & inventory</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <aside class="sidebar">
+    <a class="brand" href="{{ url_for('dashboard') }}"><span class="brand-icon">s.</span> shopkeeper<span class="brand-dot">®</span></a>
+    <div class="workspace"><span class="shop-avatar">M</span><div><strong>My little shop</strong><small>Your business workspace</small></div><span class="workspace-arrow">⌄</span></div>
+    <div class="nav-label">WORKSPACE</div>
+    <nav aria-label="Main navigation">
+      {% for id, endpoint, icon, label in [('dashboard','dashboard','◫','Overview'),('inventory','inventory','▦','Inventory'),('sales','sales_page','↗','Sales history'),('imports','imports_page','⇅','Import & export')] %}
+      <a class="nav-item {{ 'active' if page == id }}" href="{{ url_for(endpoint) }}" {% if page == id %}aria-current="page"{% endif %}><span>{{ icon }}</span>{{ label }}{% if page == id %}<i></i>{% endif %}</a>
+      {% endfor %}
+    </nav>
+    <div class="sidebar-bottom"><div class="local-badge"><span></span> Local workspace</div><p>Your numbers. A clearer picture.</p><small>Built with Python & a little care.</small></div>
+  </aside>
+  <div class="main-shell">
+    <header class="topbar"><span>Workspace <span class="slash">/</span> <strong>{{ {'dashboard':'Overview','inventory':'Inventory','sales':'Sales history','imports':'Import & export'}[page] }}</strong></span><div class="topbar-right"><span class="currency-label">USD · Single shop</span><span class="profile">MS</span></div></header>
+    <main>
+      {% for category, message in get_flashed_messages(with_categories=true) %}<div class="flash {{ category }}" role="status">{{ message }}</div>{% endfor %}
+      {% block content %}{% endblock %}
+      <footer>SHOPKEEPER <span>Made for the everyday business of doing what you love.</span></footer>
+    </main>
+  </div>
+</body>
+</html>

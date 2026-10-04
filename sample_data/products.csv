@@ -1,0 +1,3 @@
+sku,name,category,price,cost,stock,reorder_level
+DEMO-TEA,Jasmine tea tin,Pantry,16.00,6.00,25,5
+DEMO-COFFEE,House blend coffee,Pantry,22.00,9.00,20,5

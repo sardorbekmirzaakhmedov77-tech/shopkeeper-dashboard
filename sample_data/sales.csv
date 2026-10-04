@@ -1,0 +1,3 @@
+reference,sku,sold_on,quantity,unit_price,unit_cost
+EXAMPLE-001,DEMO-TEA,2026-01-10,2,16.00,6.00
+EXAMPLE-002,DEMO-COFFEE,2026-01-11,3,22.00,9.00

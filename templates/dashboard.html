@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block head %}<script src="{{ url_for('plotly_script') }}"></script>{% endblock %}
+{% block content %}
+<div class="page-heading"><div><div class="eyebrow">A LITTLE CLARITY GOES A LONG WAY</div><h1>Your shop, at a glance<span>.</span></h1><p>Keep an eye on sales. Stay one step ahead of stock.</p></div><a class="button primary" href="{{ url_for('sales_page') }}#new-sale">＋ Record a sale</a></div>
+<div class="filter-row"><div class="section-kicker"><span class="live-dot"></span> Business overview</div><form method="get" class="date-filter"><label>From <input type="date" name="start" value="{{ start }}" required></label><span>—</span><label>To <input type="date" name="end" value="{{ end }}" required></label><button class="button small" type="submit">Apply</button></form></div>
+<div class="metrics">
+  <article class="metric"><div class="metric-label">Total revenue <span class="metric-icon purple">↗</span></div><div class="metric-value">{{ metrics.revenue|money }}</div><p>Across {{ metrics.transactions }} sale entries</p></article>
+  <article class="metric"><div class="metric-label">Gross profit <span class="metric-icon green">＄</span></div><div class="metric-value">{{ metrics.profit|money }}</div><p><span class="positive">{{ metrics.margin }}% margin</span> · before operating costs</p></article>
+  <article class="metric"><div class="metric-label">Units sold <span class="metric-icon blue">▥</span></div><div class="metric-value">{{ '{:,}'.format(metrics.units) }}</div><p>Products sold in this period</p></article>
+  <article class="metric"><div class="metric-label">Low-stock products <span class="metric-icon amber">!</span></div><div class="metric-value">{{ low|length }}<span class="metric-unit"> / {{ product_count }}</span></div><p>At or below reorder level · current stock</p></article>
+</div>
+<div class="chart-grid">
+  <section class="panel revenue-panel"><div class="panel-header"><div><h2>Sales performance</h2><p>A daily view of revenue and gross profit</p></div><span class="pill">Daily</span></div>{% if not metrics.transactions %}<p class="chart-empty">No sales in this period. Try a wider date range.</p>{% endif %}{{ chart|safe }}</section>
+  <section class="panel top-products"><div class="panel-header"><div><h2>Your best sellers</h2><p>Ranked by revenue this period</p></div><span class="subtle-icon">↗</span></div><div class="rank-list">{% for product in top %}<div class="rank-item"><span class="rank-index">{{ '%02d'|format(loop.index) }}</span><div class="rank-detail"><div><strong>{{ product.name }}</strong><b>{{ product.revenue|money }}</b></div><div class="bar-track"><div style="width:{{ product.bar }}%"></div></div><small>{{ product.quantity }} units sold</small></div></div>{% else %}<div class="empty">Your best sellers will appear after your first sale.</div>{% endfor %}</div></section>
+</div>
+<div class="bottom-grid">
+  <section class="panel"><div class="panel-header"><div><h2>Recent sales</h2><p>The latest activity in your selected period</p></div><a class="text-link" href="{{ url_for('sales_page') }}">View all ↗</a></div>{% include '_table.html' %}</section>
+  <section class="panel attention-panel"><div class="panel-header"><div><h2>Needs a little attention</h2><p>Make room for your next sale</p></div><span class="attention-dot"></span></div><div class="stock-list">{% for product in low %}<a class="stock-item" href="{{ url_for('inventory', q=product.sku) }}"><div><strong>{{ product.name }}</strong><small>Reorder at {{ product.reorder_level }} units</small></div><span class="badge {{ 'red' if product.stock == 0 else 'orange' }}">{{ 'Out of stock' if product.stock == 0 else (product.stock|string + ' left') }}</span></a>{% else %}<p class="empty">All stocked up. Your inventory is in good shape.</p>{% endfor %}</div><div class="inventory-value"><span>Inventory value at cost</span><strong>{{ stock_value|money }}</strong><small>Current stock · all products</small></div><a class="button wide" href="{{ url_for('inventory') }}">Manage inventory →</a></section>
+</div>
+{% endblock %}

@@ -1,0 +1,4 @@
+<div class="table-scroll"><table><thead><tr><th>Product / reference</th><th>Date</th><th class="number">Units</th><th class="number">Revenue</th><th class="number">Gross profit</th></tr></thead><tbody>
+{% for sale in sales %}<tr><td><strong>{{ sale.name }}</strong><small>{{ sale.reference }}</small></td><td>{{ sale.sold_on }}</td><td class="number">{{ sale.quantity }}</td><td class="number dark">{{ sale.revenue|money }}</td><td class="number positive">{{ sale.profit|money }}</td></tr>
+{% else %}<tr><td colspan="5" class="empty">No sales yet. Record a sale to see it here.</td></tr>{% endfor %}
+</tbody></table></div>
